@@ -1,0 +1,930 @@
+/* ==========================================================================
+   1. VARIABLES Y TEMAS (ROOT)
+   ========================================================================== */
+:root {
+  --bg: #fafafa;
+  --fg: #222;
+  --card: #ffffff;
+  --primary: #ffcc00; /* Color Patito */
+  --success: #4CAF50;
+  --warning: #ff9800;
+  --danger: #f44336;
+  --border: #ddd;
+}
+
+[data-theme="dark"] {
+  --bg: #121212;
+  --fg: #f0f0f0;
+  --card: #1e1e1e;
+  --border: #333;
+}
+
+/* ==========================================================================
+   2. ESTILOS BASE
+   ========================================================================== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   3. HEADER
+   ========================================================================== */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background: var(--card);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-side { width: 40px; display: flex; justify-content: center; }
+
+#appTitle {
+  margin: 0;
+  font-size: 1.2rem;
+  text-align: center;
+  flex-grow: 1;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ==========================================================================
+   4. GRID Y BOTÓN FLOTANTE (Diseño 2x2)
+   ========================================================================== */
+#timerGrid {
+  display: grid;
+  gap: 15px;
+  padding: 15px;
+  /* Bajamos el mínimo a 250px para que quepa en móviles pequeños */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Si solo hay uno, que no sea gigante, pero mantenga el ancho */
+.timers-1 #timerGrid { grid-template-columns: 1fr; max-width: 400px; }
+
+#addTimerBtn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary);
+  color: #000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#addTimerBtn .material-icons { font-size: 35px; }
+
+/* ==========================================================================
+   5. TARJETAS Y COMPONENTES COMUNES
+   ========================================================================== */
+
+/* Estilo para el nombre editable del temporizador */
+.timer-name-edit {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent; /* Borde invisible para que no salte al hacer focus */
+    color: var(--fg);
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 60%; /* Ancho ajustado para que no choque con los botones de las esquinas */
+    padding: 4px;
+    margin: 0 auto; /* Ayuda al centrado dentro de flex */
+    cursor: text;
+    transition: all 0.3s ease;
+}
+
+/* Efecto visual cuando el usuario hace clic para editar */
+.timer-name-edit:focus {
+    outline: none;
+    border-bottom: 2px solid var(--primary); /* Se subraya con el color patito */
+    background: rgba(255, 204, 0, 0.05); /* Un toque muy leve de fondo */
+}
+
+/* Ajuste adicional para la fila superior para asegurar el centrado real */
+.timer-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: relative;
+}
+.timer-name-input {
+    background: none;
+    border: none;
+    border-bottom: 1px solid transparent;
+    color: var(--fg);
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    width: 80%;
+    margin-bottom: 5px;
+}
+
+.timer-name-input:focus {
+    outline: none;
+    border-bottom: 1px solid var(--primary);
+    background: rgba(0,0,0,0.05);
+}
+.timerCard {
+  background: var(--card);
+  border-radius: 25px;
+  padding: 15px; /* Bajamos un poco el padding */
+  position: relative;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 20px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box; /* Fundamental para que el padding no sume al ancho */
+  width: 100%;
+}
+
+.delete-btn-corner {
+  position: absolute;
+  top: -14px;
+  right: -10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--danger);
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* Botones de ajuste +/- */
+.btn-small {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  /*border-radius: 6px;*/
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+
+.btn-small:active {
+    transform: scale(0.95);
+}
+
+.unit-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--fg);
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   6. DISEÑO TIPO HUEVO (Izquierda Controles | Derecha Pato)
+   ========================================================================== */
+.egg-card-horizontal {
+  flex-direction: row;
+  align-items: center;
+}
+
+.egg-controls-column {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  /*width: 85px;*/
+  border-right: 1px solid var(--border);
+  padding-right: 10px;
+  align-items: center;
+}
+
+.adjust-group-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.egg-visual-column {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.egg-image-main {
+    width: 100%;       /* Ocupa el ancho disponible... */
+    max-width: 250px;  /* ...pero nunca mide más de 120px (ajusta este número a tu gusto) */
+    height: auto;
+    margin-left: 10px;
+    object-fit: contain; /* Asegura que la imagen no se deforme */
+    display: block;    /* Ayuda a centrar o alinear mejor */
+    transition: opacity 0.3s ease-in-out;
+}
+
+.egg-time-display {
+  font-size: 4rem;
+  font-weight: 800;
+  font-family: 'Courier New', monospace;
+}
+
+.btn-egg-action {
+  background: var(--primary);
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+  /*margin-top: 5px;*/
+}
+.btn-egg-action:active {
+    transform: scale(0.95);
+}
+
+.btn-egg-clear {
+  background: #eee;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+  color: #666;
+  font-weight: bold;
+  font-size: 1.3rem;
+  transition: transform 0.1s;
+  
+}
+.btn-egg-clear:active {
+    transform: scale(0.95);
+}
+
+/* ==========================================================================
+   7. DISEÑO DIGITAL (Vertical Centrado)
+   ========================================================================== */
+.digital-card-vertical {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.digital-time-large {
+  font-size: 4rem;
+  font-weight: 800;
+  font-family: 'Courier New', monospace;
+  /*margin-bottom: 10px;*/
+}
+
+.digital-adjust-row-complex {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.adjust-group-horizontal {
+  display: flex;
+  flex-direction: initial;
+  align-items: center;
+  gap: 4px;
+}
+
+.digital-actions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 150px;
+}
+
+.btn-dig-main {
+    background: var(--primary);
+    border: none;
+    padding: 12px; /* Un poco más de aire */
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Ancho fijo para que no salte al cambiar el icono */
+    height: 50px;
+    transition: transform 0.1s;
+}
+
+.btn-dig-main:active {
+    transform: scale(0.95);
+}
+
+.btn-dig-clear {
+    background: #eee;
+    border: none;
+    padding: 12px; /* Un poco más de aire */
+    border-radius: 12px;
+    color: #666;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Ancho fijo para que no salte al cambiar el icono */
+    height: 50px;
+    transition: transform 0.1s;
+    margin-top: 5px;
+}
+
+.btn-dig-clear:active {
+    transform: scale(0.95);
+}
+.btn-set-close {
+    background: #eee;
+    border: none;
+    padding: 12px; /* Un poco más de aire */
+    border-radius: 12px;
+    color: #666;
+    /*font-size: 1.3rem;*/
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px; /* Ancho fijo para que no salte al cambiar el icono */
+    height: 50px;
+    transition: transform 0.1s;
+    margin-top: 5px;
+}
+
+.btn-set-close:active {
+    transform: scale(0.95);
+}
+.btn-dig-cancelar {
+    background: #eee;
+    border: none;
+    padding: 12px; /* Un poco más de aire */
+    border-radius: 12px;
+    color: #666;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.btn-dig-cancelar:active {
+    transform: scale(0.95);
+}
+
+
+
+/* ==========================================================================
+   8. MODALES
+   ========================================================================== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.modal-content {
+  background: var(--card);
+  padding: 25px;
+  border-radius: 25px;
+  width: 85%;
+  max-width: 400px;
+}
+
+/* Layout del temporizador digital */
+.digital-main-layout {
+    display: flex;
+    flex-direction: row; /* Alinea controles a la izq y botones a la der */
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Espacio entre las dos columnas */
+    width: 100%;
+    margin-top: 10px;
+}
+
+.digital-adjust-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.digital-actions-side {
+    display: flex;
+    flex-direction: column; /* Start arriba, Clear abajo */
+    gap: 10px;
+    align-items: center;
+}
+
+/* Botones circulares para el tiempo */
+.btn-round {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    /*background: var(--bg);*/
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajuste horizontal de botones [ + ] HR [ - ] */
+.adjust-group-horizontal {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.unit-label {
+    width: 35px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   8. MODALES DE SELECTOR DE TIMER
+   ========================================================================== */
+.selector-content {
+  text-align: center;
+  max-width: 350px !important;
+}
+
+.selector-options {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 25px 0;
+}
+
+.selector-card {
+  background: #eee;
+  border: 2px solid var(--border);
+  border-radius: 15px;
+  padding: 15px;
+  width: 120px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.selector-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-5px);
+}
+
+.selector-card img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+.selector-card span {
+  font-weight: bold;
+  color: #666;
+}
+/* ==========================================================================
+   9. PINS
+   ========================================================================== */
+
+.egg-card-complex {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  gap: 10px;
+}
+
+.timer-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 5px;
+}
+
+.timer-body-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.timer-bottom-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.pin-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.3s;
+}
+
+.pin-btn.active {
+  color: var(--primary); /* El pin se pone amarillo cuando está activo */
+}
+
+.egg-time-display-large {
+  font-size: 2.5rem; /* Bajamos de 3rem a 2.5rem para móviles */
+  font-weight: 900;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  padding: 10px 0;
+  border-top: 2px solid var(--border);
+  min-height: 80px; /* Asegura que el hueco del reloj siempre mida lo mismo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.egg-action-group-horizontal {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+/*alarma*/
+.alarm-content {
+    border: 4px solid var(--primary);
+    text-align: center;
+    animation: pulse-border 1.5s infinite;
+}
+
+.alarm-icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+    animation: ring 0.5s infinite alternate;
+}
+
+@keyframes pulse-border {
+    0% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(255, 204, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
+}
+
+@keyframes ring {
+    from { transform: rotate(-10deg); }
+    to { transform: rotate(10deg); }
+}
+
+#stopAlarmBtn {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 20px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+/*titulo digital timer*/
+/* Estilo para el Reloj Principal */
+/* Forzamos a que el contenedor del tiempo ocupe todo el ancho */
+.egg-time-display-large, 
+.digital-time-large-bottom {
+    display: block;                /* Asegura que se comporte como bloque */
+    width: 100%;                   /* Ocupa todo el ancho de la tarjeta */
+    box-sizing: border-box;        /* Para que el padding no lo desborde */
+    font-size: 3.5rem;
+    font-weight: 900;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace; 
+    padding: 15px 5px;
+    margin: 10px 0;
+    background: rgba(0, 0, 0, 0.05); 
+    border-radius: 15px;           /* Bordes un poco más suaves */
+    color: var(--fg);
+    letter-spacing: 2px;
+    border: 1px solid var(--border);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Ajuste para que en modo oscuro el fondo del LCD se vea bien */
+[data-theme="dark"] .digital-time-large-bottom,
+[data-theme="dark"] .egg-time-display-large {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--primary); /* Los números resaltan en amarillo patito en modo noche */
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3); /* Brillo tipo neón */
+}
+
+/* Ajuste para que la tarjeta no sea excesivamente alta */
+.digital-card-complex {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Botón Settings sin borde */
+#settingsBtn {
+    border: none;
+    background: transparent;
+    color: var(--fg);
+    transition: transform 0.3s ease;
+}
+
+#settingsBtn:active {
+    transform: rotate(45deg);
+}
+
+/* Toggle Sol y Luna */
+.theme-toggle-container {
+    position: relative;
+}
+
+.theme-checkbox { opacity: 0; position: absolute; }
+
+.theme-label {
+    background-color: #333;
+    width: 50px;
+    border-radius: 50px;
+    position: relative;
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.theme-label .sun-icon { color: #f1c40f; font-size: 18px; }
+.theme-label .moon-icon { color: #f39c12; font-size: 18px; }
+
+.theme-label .ball {
+    background-color: #fff;
+    width: 24px; height: 24px;
+    position: absolute;
+    left: 3px; /*top: 3px;*/
+    border-radius: 50%;
+    transition: transform 0.2s linear;
+}
+
+.theme-checkbox:checked + .theme-label .ball {
+    transform: translateX(30px);
+}
+
+/* Extras de ajustes */
+.divider { border: 0; border-top: 1px solid var(--border); margin: 15px 0; }
+.version-text { font-size: 12px; color: #888; margin-top: 10px; }
+.policy-link { color: var(--primary); text-decoration: underline; cursor: pointer; font-size: 14px; }
+.support-link { color: var(--fg); text-decoration: none; font-weight: bold; }
+.badge { background: var(--primary); color: #000; padding: 2px 10px; border-radius: 10px; font-weight: bold; }
+
+.privacy-text { 
+    text-align: left; 
+    font-size: 14px; 
+    max-height: 250px; 
+    overflow-y: auto; 
+    margin: 15px 0;
+}
+
+.modern-input {
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+    outline: none;
+}
+
+/* Para que el badge de antes no desentone si decides mantenerlo visualmente */
+.setting-item input[type="number"] {
+    font-size: 1rem;
+}
+@media (max-width: 380px) {
+    .digital-time-large-bottom, 
+    .egg-time-display-large {
+        font-size: 2.8rem;
+    }
+}
+/*boton aceptar de settings*/
+/* Estilo Mejorado para el Botón Aceptar */
+#closeSettings.btn-main {
+    background: var(--primary);
+    color: #443300; /* Un tono café/oscuro para mejor contraste con el amarillo */
+    border: none;
+    padding: 15px 20px;
+    border-radius: 18px; /* Bordes muy redondeados tipo Android moderno */
+    font-size: 1.1rem;
+    font-weight: 900;
+    width: 100%;
+    margin-top: 25px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+    /* Sombra suave para dar relieve */
+    box-shadow: 0 6px 0 #e6b800, 0 8px 15px rgba(0,0,0,0.15);
+    transition: all 0.1s ease;
+    position: relative;
+    top: 0;
+}
+
+/* Efecto al presionar (se hunde) */
+#closeSettings.btn-main:active {
+    top: 4px; /* Baja un poco */
+    box-shadow: 0 2px 0 #e6b800, 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Efecto Hover (solo para PC) */
+@media (hover: hover) {
+    #closeSettings.btn-main:hover {
+        filter: brightness(1.05);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 0 #e6b800, 0 12px 20px rgba(0,0,0,0.2);
+    }
+    #closeSettings.btn-main:hover:active {
+        transform: translateY(2px);
+    }
+}
+
+.support-section {
+    text-align: center;
+    padding: 20px 10px;
+    background: rgba(0,0,0,0.02); /* Fondo muy sutil para diferenciar la zona */
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.support-link {
+    display: inline-flex; /* Para alinear el icono y el texto perfectamente */
+    align-items: center;
+    background: var(--card);
+    color: var(--fg);
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-weight: bold;
+    transition: all 0.2s ease;
+    margin: 5px 0 15px 0;
+}
+
+/* Efecto al tocar o pasar el ratón */
+.support-link:hover, .support-link:active {
+    background: var(--primary); /* Se vuelve amarillo patito al interactuar */
+    border-color: var(--primary);
+    transform: scale(1.02);
+}
+
+[data-theme="dark"] .support-link {
+    background: #2a2a2a;
+}
+/* Título Principal del Modal (Ajustes) */
+#modalTitle {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--fg);
+    margin-bottom: 25px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 3px solid var(--primary);
+    display: inline-block;
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+/* Títulos de cada ítem (Apariencia, Idioma, Vibración, etc.) */
+.setting-item span:first-child {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--fg);
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo específico para "Soporte y Sugerencias" */
+#labelSupport {
+    font-size: 1.1rem;
+    color: var(--fg);
+    margin-bottom: 12px;
+    display: block;
+}
+
+#labelSupport strong {
+    color: var(--primary); /* El título de soporte en el color de la marca */
+    font-weight: 800;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Quitamos el borde al último ítem antes del divider */
+.setting-item:last-of-type {
+    border-bottom: none;
+}
+
+.modern-input {
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-family: inherit;
+    font-weight: bold;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.modern-input:focus {
+    border-color: var(--primary);
+}
+
+.settings-content {
+    max-height: 90vh;        /* No permite que el modal mida más del 90% de la pantalla */
+    overflow-y: auto;        /* Activa el scroll vertical si es necesario */
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Estilo para que la barra de scroll se vea limpia (opcional) */
+.settings-content::-webkit-scrollbar {
+    width: 6px;
+}
+.settings-content::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+/* Reducimos el tamaño del título principal para que no robe tanto espacio */
+#modalTitle {
+    font-size: 1.5rem;       /* Bajamos de 1.8rem a 1.5rem */
+    margin-bottom: 15px;    /* Menos espacio abajo */
+    padding-bottom: 8px;
+}
+
+/* Compactamos los ítems de ajuste */
+.setting-item {
+    padding: 10px 0;        /* Bajamos de 15px a 10px */
+}
+
+/* El botón Aceptar un poco más compacto */
+#closeSettings.btn-main {
+    margin-top: 15px;       /* Bajamos de 25px a 15px */
+    padding: 12px 20px;     /* Un poco menos de relleno vertical */
+}
+
+/* La sección de soporte más pequeña */
+.support-section {
+    padding: 15px 10px;     /* Más compacto */
+    margin-top: 15px;
+}
+
+.setting-item span:first-child {
+    font-size: 0.95rem;     /* Un poquito más pequeño para que no haga salto de línea */
+    max-width: 60%;         /* Asegura espacio para el switch a la derecha */
+}

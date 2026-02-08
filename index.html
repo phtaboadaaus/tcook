@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+<link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/android-chrome-512x512.png">
+
+<meta name="theme-color" content="#ffffff">
+  <meta charset="UTF-8">
+  <title>Duck Timer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-side"></div> <h1 id="appTitle">Duck Timer</h1>
+  <div class="header-side">
+    <button id="settingsBtn" class="icon-btn">
+      <span class="material-icons">settings</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div id="timerGrid" class="timers-0"></div>
+</main>
+
+<button id="addTimerBtn" class="icon-btn">
+  <span class="material-icons">add</span>
+</button>
+
+<div id="settingsModal" class="modal">
+  <div class="modal-content settings-content">
+    <h2 id="modalTitle">Ajustes</h2>
+    
+    <div class="setting-item">
+    <span id="labelDark">Apariencia</span>
+    <div class="theme-toggle-container">
+        <input type="checkbox" id="themeSwitch" class="theme-checkbox">
+        <label for="themeSwitch" class="theme-label">
+            <span class="material-icons sun-icon">light_mode</span>
+            <span class="material-icons moon-icon">dark_mode</span>
+            <div class="ball"></div>
+        </label>
+    </div>
+</div>
+<div class="setting-item">
+    <span id="labelAlarmMode">Modo de Alarma</span>
+    <select id="alarmModeSelect" class="modern-select">
+        <option value="once">Sonar una vez</option>
+        <option value="loop">Repetir (Bucle)</option>
+    </select>
+</div>
+<div class="setting-item">
+    <span id="labelVibrate">Vibración</span>
+    <div class="theme-toggle-container">
+        <input type="checkbox" id="vibrateSwitch" class="theme-checkbox">
+        <label for="vibrateSwitch" class="theme-label">
+            <span class="material-icons" style="font-size: 18px; color: #888;">vibration</span>
+            <div class="ball"></div>
+        </label>
+    </div>
+</div>
+
+    <div class="setting-item">
+      <span id="labelLang">Idioma</span>
+      <select id="langSelect" class="modern-select">
+          <option value="es">Español</option>
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="it">Italiano</option>
+          <option value="de">Deutsch</option>
+          <option value="pt">Português</option>
+      </select>
+    </div>
+
+    <div class="setting-item">
+        <span id="labelMaxTimers">Máximo de Timers</span>
+        <input type="number" id="maxTimersInput" class="modern-input" min="1" max="20" style="width: 50px;">
+    </div>
+
+    <hr class="divider">
+
+    <div class="support-section">
+  <p id="labelSupport"><strong>Soporte y Sugerencias:</strong></p>
+  
+  <a href="mailto:patiniuscompany@gmail.com?subject=Sugerencia%20Duck%20Timer" class="support-link">
+    <span class="material-icons" style="font-size: 18px; vertical-align: middle; margin-right: 5px;">email</span>
+    patiniuscompany@gmail.com
+  </a>
+  
+  <p class="policy-link" id="openPrivacy">Política de Privacidad</p>
+  <p class="version-text" id="labelVersionText">Versión: 1.0.0</p>
+</div>
+
+    <button id="closeSettings" class="btn-main">
+    <span class="material-icons" style="vertical-align: middle; font-size: 20px; margin-right: 5px;">check_circle</span>
+    <span id="labelBtnAccept">ACEPTAR</span>
+    </button>
+  </div>
+</div>
+
+<div id="privacyModal" class="modal" style="display:none; z-index: 30000;">
+  <div class="modal-content privacy-content">
+    <h2>Política de Privacidad</h2>
+    <div class="privacy-text">
+      <p><strong>Duck Timer</strong> valora tu privacidad. Esta aplicación:</p>
+      <ul>
+        <li>No recopila datos personales.</li>
+        <li>No comparte información con terceros.</li>
+        <li>Utiliza el almacenamiento local de tu navegador/dispositivo únicamente para guardar tus preferencias de timers, idioma y tema visual.</li>
+        <li>Las notificaciones se procesan localmente en tu dispositivo.</li>
+      </ul>
+      <p>Al usar esta app, aceptas el uso de almacenamiento local (Localstorage) para su correcto funcionamiento.</p>
+    </div>
+    <button id="closePrivacy" class="btn-set-close">CERRAR</button>
+  </div>
+</div>
+
+<script src="languages.js"></script>
+<script src="settings.js"></script>
+<script src="notify.js"></script>
+<script src="eggtimer.js"></script>
+<script src="digitaltimer.js"></script>
+<script src="timers.js"></script>
+<script src="app.js"></script>
+
+<div id="selectorModal" class="modal">
+  <div class="modal-content selector-content">
+    <h2 id="selectorTitle">Nuevo Temporizador</h2>
+    <div class="selector-options">
+      <button class="selector-card" id="btnSelectEgg">
+        <img src="assets/pato.png" alt="Egg">
+        <span>Patito</span>
+      </button>
+      <button class="selector-card" id="btnSelectDigital">
+        <img src="assets/digital.png" alt="Digital"> <span>Digital</span>
+      </button>
+    </div>
+    <button id="closeSelector" class="btn-dig-cancelar">Cancelar</button>
+  </div>
+</div>
+<div id="alarmModal" class="modal" style="display:none; z-index: 20000;">
+  <div class="modal-content alarm-content">
+    <div class="alarm-icon">🔔</div>
+    <h2 id="alarmTimerName">NOMBRE DEL TIMER</h2>
+    <p id="alarmMessage">¡El tiempo ha terminado!</p>
+    <button id="stopAlarmBtn" class="btn-main" style="background: var(--danger); color: white;">
+      DETENER ALARMA
+    </button>
+  </div>
+</div>
+<div id="infoModal" class="modal" style="display:none; z-index: 25000;">
+  <div class="modal-content" style="text-align:center;">
+    <div style="font-size: 40px;">⚠️</div>
+    <p id="infoModalMessage" style="font-weight:bold; margin: 20px 0;"></p>
+    <button id="closeInfoBtn" class="btn-main">OK</button>
+  </div>
+</div>
+</body>
+</html>
